@@ -21,8 +21,47 @@ class CourseAV(APIView):
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'succes':True,'message':'Curso creado exitosamente'},status=status.HTTP_200_OK)
+                return Response({'data':data,'succes':True,'message':'Curso creado exitosamente'},status=status.HTTP_201_OK)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el curso'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
+class CourseDetail(APIView):
+    def get(self,request,pk):
+        data=None
+        #buscar el registro
+        try:
+            course=Course.objects.get(pk=pk)
+            serializer=CouserSerializer(course)
+            data=serializer.data
+            return Response({'data':data,'success':True,'message':'Curso encontrada'},status=status.HTTP_200_OK)
+        except course.DoesNotExist :
+            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+    
+    def put(self,request,pk):
+        data=None
+        course=None
+        try:
+            course=Course.objects.get(pk=pk)
+            serializer=CouserSerializer(course,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                data=serializer.data
+                return Response({'data':data,'success':True,'message':'Curso actualizado'},status=status.HTTP_200_OK)
+            else:
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el curso'}, status=status.HTTP_400_BAD_REQUEST)
+        except Course.DoesNotExist:
+            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'data':serializer.errors,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, pk):
+        data=None
+        course=None
+        try:
+            course=Course.objects.get(pk=pk)
+            course.delete()
+            return Response({'data':[],'success':True,'message':'Curso eliminado'},status=status.HTTP_204_NO_CONTENT)
+        except Course.DoesNotExist:
+            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'data':data,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
