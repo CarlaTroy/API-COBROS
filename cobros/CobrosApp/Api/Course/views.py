@@ -21,7 +21,7 @@ class CourseAV(APIView):
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'succes':True,'message':'Curso creado exitosamente'},status=status.HTTP_201_OK)
+                return Response({'data':data,'succes':True,'message':'Curso creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el curso'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
