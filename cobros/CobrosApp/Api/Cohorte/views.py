@@ -21,12 +21,12 @@ class CohorteAV(APIView):
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'succes':True,'message':'Curso creado exitosamente'},status=status.HTTP_201_CREATED)
+                return Response({'data':data,'succes':True,'message':'Cohorte creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el curso'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la cohorte'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
-class CourseDetail(APIView):
+class CohorteDetail(APIView):
     def get(self,request,pk):
         data=None
         #buscar el registro
@@ -34,9 +34,9 @@ class CourseDetail(APIView):
             course=Cohorte.objects.get(pk=pk)
             serializer=CohorteSerializer(course)
             data=serializer.data
-            return Response({'data':data,'success':True,'message':'Curso encontrada'},status=status.HTTP_200_OK)
+            return Response({'data':data,'success':True,'message':'Cohorte encontrada'},status=status.HTTP_200_OK)
         except course.DoesNotExist :
-            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
     
     def put(self,request,pk):
         data=None
@@ -47,11 +47,11 @@ class CourseDetail(APIView):
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'success':True,'message':'Curso actualizado'},status=status.HTTP_200_OK)
+                return Response({'data':data,'success':True,'message':'Cohorte actualizado'},status=status.HTTP_200_OK)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el curso'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Cohorte'}, status=status.HTTP_400_BAD_REQUEST)
         except Cohorte.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':serializer.errors,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request, pk):
@@ -60,8 +60,8 @@ class CourseDetail(APIView):
         try:
             course=Cohorte.objects.get(pk=pk)
             course.delete()
-            return Response({'data':[],'success':True,'message':'Curso eliminado'},status=status.HTTP_200_OK)
+            return Response({'data':[],'success':True,'message':'Cohorte eliminado'},status=status.HTTP_200_OK)
         except Cohorte.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Curso no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':data,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
