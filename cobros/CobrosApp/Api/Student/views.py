@@ -32,19 +32,19 @@ class StudentDetail(APIView):
         data=None
         #buscar el registro
         try:
-            course=Student.objects.get(pk=pk)
-            serializer=StudentSerializer(course)
+            estudiante=Student.objects.get(pk=pk)
+            serializer=StudentSerializer(estudiante)
             data=serializer.data
-            return Response({'data':data,'success':True,'message':'Cohorte encontrada'},status=status.HTTP_200_OK)
-        except course.DoesNotExist :
-            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':True,'message':'Estudiante encontrada'},status=status.HTTP_200_OK)
+        except Student.DoesNotExist :
+            return Response({'data':data,'success':False,'message':'Estudiante no encontrado'},status=status.HTTP_404_NOT_FOUND)
     
     def put(self,request,pk):
         data=None
-        course=None
+        estudiante=None
         try:
-            course=Student.objects.get(pk=pk)
-            serializer=StudentSerializer(course,data=request.data)
+            estudiante=Student.objects.get(pk=pk)
+            serializer=StudentSerializer(estudiante,data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
@@ -61,8 +61,8 @@ class StudentDetail(APIView):
         try:
             course=Student.objects.get(pk=pk)
             course.delete()
-            return Response({'data':[],'success':True,'message':'Cohorte eliminado'},status=status.HTTP_200_OK)
+            return Response({'data':[],'success':True,'message':'Estudiante eliminado'},status=status.HTTP_200_OK)
         except Student.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Estudiante no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':data,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)

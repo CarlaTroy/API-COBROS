@@ -30,12 +30,12 @@ class StudentSerializer(serializers.ModelSerializer):
             'user': validated_data.get('user_id', None)
             }
         return Student.objects.create(**data)
-"""     def update(self,instancia,validated_data):
+    def update(self,instancia,validated_data):
         instancia.name=validated_data.get('name',instancia.name)
-        instancia.date_init=validated_data.get('date_init',instancia.date_init)
-        instancia.date_end=validated_data.get('date_end',instancia.date_end)
-        instancia.cost_effective=validated_data.get('cost_effective',instancia.cost_effective)
-        instancia.cost_credit=validated_data.get('cost_credit',instancia.cost_credit)
-        instancia.course=validated_data.get('course_id',instancia.course)
+        instancia.last_name=validated_data.get('last_name',instancia.last_name)
+        instancia.identification=validated_data.get('identification',instancia.identification)
+        instancia.cell_phone=validated_data.get('cell_phone',instancia.cell_phone)
+        instancia.address=validated_data.get('address',instancia.address)
+        instancia.user=validated_data.get('user_id',instancia.user)
         instancia.save()
-        return instancia """
+        return instancia
