@@ -56,4 +56,14 @@ class Enrollement(models.Model):
     updated_on=models.DateTimeField(auto_now=True)
     created_on=models.DateTimeField(auto_now_add=True)
     def __str__(self) :
-        return str(self.discount) 
+        return str(self.student.name+" "+self.cohorte.name) 
+    
+class Payment(models.Model):
+    amount=models.PositiveIntegerField(max_length=10)
+    date_pay=models.DateField(max_length=250)
+    status_pay=models.ForeignKey(Status_Pay,on_delete=models.RESTRICT,related_name='statuslist')
+    enrollement=models.ForeignKey(Enrollement,on_delete=models.RESTRICT,related_name='enrrollementlist')
+    updated_on=models.DateTimeField(auto_now=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+    def __str__(self) :
+        return str(self.amount) 

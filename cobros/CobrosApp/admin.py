@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from CobrosApp.models import Course,Cohorte,Student,Enrollement,Status_Pay,Tipe_Pay
+from CobrosApp.models import Course,Cohorte,Student,Enrollement,Status_Pay,Tipe_Pay,Payment
 
 # Register your models here.
 # Register your models here.
@@ -12,3 +12,4 @@ admin.site.register(Student)
 admin.site.register(Enrollement)
 admin.site.register(Status_Pay)
 admin.site.register(Tipe_Pay)
+admin.site.register(Payment)
