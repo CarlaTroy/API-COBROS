@@ -15,15 +15,16 @@ class StudentAV(APIView):
         except Exception as e:
             return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
     def post(self,request):
+        #import pdb; pdb.set_trace()
         data=None
         try:
             serializer=StudentSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'succes':True,'message':'Cohorte creado exitosamente'},status=status.HTTP_201_CREATED)
+                return Response({'data':data,'succes':True,'message':'Estudiante creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la cohorte'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el estudiante'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class StudentDetail(APIView):
