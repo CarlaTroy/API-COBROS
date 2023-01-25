@@ -2,6 +2,7 @@ from django.urls import path
 from CobrosApp.Api.Course.views import CourseAV,CourseDetail
 from CobrosApp.Api.Cohorte.views import CohorteAV
 from CobrosApp.Api.Cohorte.views import CohorteDetail
+from CobrosApp.Api.Enrollement.views import EnrollementAV, EnrollementDetail
 from CobrosApp.Api.Student.views import StudentAV
 from CobrosApp.Api.Student.views import StudentDetail
 urlpatterns = [
@@ -13,4 +14,7 @@ urlpatterns = [
     
     path('students/',StudentAV.as_view(),name='listado-students'),
     path('students/<int:pk>',StudentDetail.as_view(),name='detalle-students'),
+    
+    path('enrollements/',EnrollementAV.as_view(),name='listado-matriculas'),
+    path('enrollements/<int:pk>',EnrollementDetail.as_view(),name='detalle-matricula'),
 ]

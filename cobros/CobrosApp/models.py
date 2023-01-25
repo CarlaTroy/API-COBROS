@@ -21,6 +21,18 @@ class Cohorte(models.Model):
     def __str__(self) :
         return self.name
     
+class Tipe_Pay(models.Model):
+    name=models.CharField(max_length=100,unique=True)
+    codigo=models.CharField(max_length=100,unique=True)
+    def __str__(self) :
+        return self.name
+    
+class Status_Pay(models.Model):
+    name=models.CharField(max_length=100,unique=True)
+    codigo=models.CharField(max_length=100,unique=True)
+    def __str__(self) :
+        return self.name
+
 class Student(models.Model):
     name=models.CharField(max_length=100)
     last_name=models.CharField(max_length=100)
@@ -32,3 +44,16 @@ class Student(models.Model):
     created_on=models.DateTimeField(auto_now_add=True)
     def __str__(self) :
         return self.name 
+    
+class Enrollement(models.Model):
+    student=models.ForeignKey(Student,on_delete=models.RESTRICT,related_name='studentlist')
+    cohorte=models.ForeignKey(Cohorte,on_delete=models.RESTRICT,related_name='cohortelist')
+    tipe_pay=models.ForeignKey(Tipe_Pay,on_delete=models.RESTRICT,related_name='tipopagolist')
+    cuotas =models.PositiveIntegerField(max_length=10)
+    day_limite =models.PositiveIntegerField(max_length=4)
+    cash =models.PositiveIntegerField(max_length=10)
+    discount = models.PositiveIntegerField(max_length=3)
+    updated_on=models.DateTimeField(auto_now=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+    def __str__(self) :
+        return str(self.discount) 
