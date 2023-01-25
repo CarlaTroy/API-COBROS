@@ -20,17 +20,16 @@ class StudentSerializer(serializers.ModelSerializer):
                    'user',
                    'user_id',
                 ]
-        def create(self, validated_data):
-            data = {
-                'name': validated_data.get('name', None),
-                'last_name': validated_data.get('last_name', None),
-                'identification': validated_data.get('identification', None),
-                'cell_phone': validated_data.get('cell_phone', None),
-                'address': validated_data.get('address', None),
-                'user': validated_data.get('user_id', None)
-                }
-
-            return Student.objects.create(**data)
+    def create(self, validated_data):
+        data = {
+            'name': validated_data.get('name', None),
+            'last_name': validated_data.get('last_name', None),
+            'identification': validated_data.get('identification', None),
+            'cell_phone': validated_data.get('cell_phone', None),
+            'address': validated_data.get('address', None),
+            'user': validated_data.get('user_id', None)
+            }
+        return Student.objects.create(**data)
 """     def update(self,instancia,validated_data):
         instancia.name=validated_data.get('name',instancia.name)
         instancia.date_init=validated_data.get('date_init',instancia.date_init)
