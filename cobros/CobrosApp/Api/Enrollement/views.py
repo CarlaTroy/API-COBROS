@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
-from CobrosApp.models import Enrollement
+from CobrosApp.models import Enrollement, Status_Pay
+from datetime import date, datetime
 
 class EnrollementAV(APIView):
     def get(self, request):
@@ -22,22 +23,30 @@ class EnrollementAV(APIView):
             serializer=EnrollementSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                #import pdb; pdb.set_trace()
                 data=serializer.data
                 ## CODIGO 001 ES EN CUOTAS
                 #una vez creada la matricula vemos los pagos creamos una tabla de pagos si en algn caso tiene credito
-                """                 if data.tipe_pay.codigo=='001':
-                                    dataPayment={
-                                        "amount": 0,
-                                        "date_pay": None,
-                                        "date_limit": None,
-                                        "status_pay": None,
-                                        "cuotas":data.cuotas,
-                                        "enrollement_id":data.day_limite,
-                                    }
-                                    serializerPayment=PaymentSerializer(data=data) """
+                if data['tipe_pay']['codigo']=='001':
+                    ##obtener el estado de pago de la tabla estado de pago
+                    idStatusPay=Status_Pay.objects.filter(codigo='002').first()
+                    ##definir fechas de pagos
+                    now = date.today()
+                    next_month = datetime(now.year, now.month+1,data['day_limite'])
+                    dataPayment={
+                        "amount": 0,
+                        "date_pay": now,
+                        "date_limit": next_month,
+                        "status_pay_id": idStatusPay.id,
+                        "enrollement_id":data['id']
+                    }
+                    serializerPayment=PaymentSerializer(data=dataPayment)
+                    if serializerPayment.is_valid():
+                        return Response({'data':serializerPayment.data,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                    return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
                 return Response({'data':data,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede actualizar la matricula'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la matricula'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class EnrollementDetail(APIView):
