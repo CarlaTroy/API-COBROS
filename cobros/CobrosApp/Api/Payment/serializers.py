@@ -27,6 +27,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         data = {
             'amount': validated_data.get('amount', None),
             'date_pay': validated_data.get('date_pay', None),
+            'date_limit': validated_data.get('date_limit', None),
             'status_pay': validated_data.get('status_pay_id', None),
             'enrollement': validated_data.get('enrollement_id', None)
             }

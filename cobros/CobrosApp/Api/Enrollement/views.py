@@ -29,7 +29,8 @@ class EnrollementAV(APIView):
                                     dataPayment={
                                         "amount": 0,
                                         "date_pay": None,
-                                        "status_pay": data.tipe_pay.id,
+                                        "date_limit": None,
+                                        "status_pay": None,
                                         "cuotas":data.cuotas,
                                         "enrollement_id":data.day_limite,
                                     }
