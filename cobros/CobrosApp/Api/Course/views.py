@@ -11,9 +11,9 @@ class CourseAV(APIView):
             courses=Course.objects.all()
             serializer=CouserSerializer(courses,many=True)
             data=serializer.data
-            return Response({'data':data,'succes':True,'message':'Listado de cursos'},status=status.HTTP_200_OK)
+            return Response({'data':data,'success':True,'message':'Listado de cursos'},status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
     def post(self,request):
         data=None
         try:
