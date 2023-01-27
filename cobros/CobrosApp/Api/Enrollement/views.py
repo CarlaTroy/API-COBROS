@@ -13,9 +13,9 @@ class EnrollementAV(APIView):
             enrollement=Enrollement.objects.all()
             serializer=EnrollementSerializer(enrollement,many=True)
             data=serializer.data
-            return Response({'data':data,'succes':True,'message':'Listado de las matriculas'},status=status.HTTP_200_OK)
+            return Response({'data':data,'success':True,'message':'Listado de las matriculas'},status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
     def post(self,request):
         #import pdb; pdb.set_trace()
         data=None
@@ -47,7 +47,7 @@ class EnrollementAV(APIView):
                         }
                         serializerPayment=PaymentSerializer(data=dataPayment)
                         if serializerPayment.is_valid():
-                            #serializerPayment.save()
+                            serializerPayment.save()
                             arrayPayment.append(serializerPayment.data)
                         count=count+1
                         #else:
@@ -57,13 +57,13 @@ class EnrollementAV(APIView):
                             "enrollement":data,
                             "payment":arrayPayment
                         }    
-                        return Response({'data':dataMatriculaPago,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                        return Response({'data':dataMatriculaPago,'success':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
                     
-                return Response({'data':data,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                return Response({'data':data,'success':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la matricula'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({'data':data,'succes':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class EnrollementDetail(APIView):
     def get(self,request,pk):
         data=None
