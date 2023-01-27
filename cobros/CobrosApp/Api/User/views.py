@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Cohorte.serializers import CohorteSerializer 
 from CobrosApp.models import Cohorte
-from cobros.CobrosApp.Api.Student.serializers import StudentSerializer
+from CobrosApp.Api.Student.serializers import StudentSerializer
 
 class StudentAV(APIView):
     def get(self, request):
