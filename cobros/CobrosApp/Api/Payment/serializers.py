@@ -18,6 +18,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = [  'id', 
                    'amount',
                    'date_pay',
+                   'date_limit',
                    'status_pay', 
                    'status_pay_id',
                    'enrollement', 

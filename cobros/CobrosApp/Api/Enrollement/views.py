@@ -32,18 +32,33 @@ class EnrollementAV(APIView):
                     idStatusPay=Status_Pay.objects.filter(codigo='002').first()
                     ##definir fechas de pagos
                     now = date.today()
-                    next_month = datetime(now.year, now.month+1,data['day_limite'])
-                    dataPayment={
-                        "amount": 0,
-                        "date_pay": now,
-                        "date_limit": next_month,
-                        "status_pay_id": idStatusPay.id,
-                        "enrollement_id":data['id']
-                    }
-                    serializerPayment=PaymentSerializer(data=dataPayment)
-                    if serializerPayment.is_valid():
-                        return Response({'data':serializerPayment.data,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
-                    return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
+                    ##recorrer para el numero de cuotas
+                    count=1
+                    arrayPayment=list()
+                    #import pdb; pdb.set_trace()
+                    while count<=data['cuotas']:
+                        next_month = datetime(now.year, now.month+(count),data['day_limite'])
+                        dataPayment={
+                            "amount": 0,
+                            "date_pay": now,
+                            "date_limit": next_month,
+                            "status_pay_id": idStatusPay.id,
+                            "enrollement_id":data['id']
+                        }
+                        serializerPayment=PaymentSerializer(data=dataPayment)
+                        if serializerPayment.is_valid():
+                            #serializerPayment.save()
+                            arrayPayment.append(serializerPayment.data)
+                        count=count+1
+                        #else:
+                            #return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        dataMatriculaPago={
+                            "enrollement":data,
+                            "payment":arrayPayment
+                        }    
+                        return Response({'data':dataMatriculaPago,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                    
                 return Response({'data':data,'succes':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la matricula'}, status=status.HTTP_400_BAD_REQUEST)
