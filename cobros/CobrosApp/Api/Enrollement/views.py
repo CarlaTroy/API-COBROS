@@ -39,9 +39,9 @@ class EnrollementAV(APIView):
                     while count<=data['cuotas']:
                         next_month = datetime(now.year, now.month+(count),data['day_limite'])
                         dataPayment={
-                            "amount": 0,
+                            "amount": 1,
                             "date_pay": now,
-                            "date_limit": next_month,
+                            "date_limit": now,
                             "status_pay_id": idStatusPay.id,
                             "enrollement_id":data['id']
                         }
@@ -49,9 +49,9 @@ class EnrollementAV(APIView):
                         if serializerPayment.is_valid():
                             serializerPayment.save()
                             arrayPayment.append(serializerPayment.data)
-                        count=count+1
-                        #else:
-                            #return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
+                            count=count+1
+                        else:
+                            return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
                     else:
                         dataMatriculaPago={
                             "enrollement":data,

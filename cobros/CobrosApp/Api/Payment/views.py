@@ -19,13 +19,13 @@ class PaymentAV(APIView):
         #import pdb; pdb.set_trace()
         data=None
         try:
-            serializer=EnrollementSerializer(data=request.data)
+            serializer=PaymentSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 data=serializer.data
-                return Response({'data':data,'success':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                return Response({'data':data,'success':True,'message':'Pago  creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede actualizar la matricula'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el pago'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class PaymentDetail(APIView):

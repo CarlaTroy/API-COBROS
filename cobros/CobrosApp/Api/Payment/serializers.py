@@ -32,7 +32,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             'status_pay': validated_data.get('status_pay_id', None),
             'enrollement': validated_data.get('enrollement_id', None)
             }
-        return Enrollement.objects.create(**data)
+        return Payment.objects.create(**data)
 """     def update(self,instancia,validated_data):
         instancia.name=validated_data.get('name',instancia.name)
         instancia.last_name=validated_data.get('last_name',instancia.last_name)
