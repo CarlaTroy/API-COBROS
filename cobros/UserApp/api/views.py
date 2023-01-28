@@ -29,6 +29,7 @@ def login_view(request):
         if userAuth:
             #User = get_user_model()
             user = User.objects.get(username=usuarioName)
+            data['id']=user.id
             data['response']='Inicio de sesión exitosamente'
             data['username']=user.username
             data['email']=user.email
