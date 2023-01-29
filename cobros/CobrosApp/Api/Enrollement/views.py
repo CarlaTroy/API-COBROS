@@ -51,15 +51,14 @@ class EnrollementAV(APIView):
                             arrayPayment.append(serializerPayment.data)
                             count=count+1
                         else:
-                            return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear la tabla pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
+                            return Response({'data':serializerPayment.errors,'success':False,'message':'No se puede crear los pagos de creditos'}, status=status.HTTP_400_BAD_REQUEST)
                     else:
                         dataMatriculaPago={
                             "enrollement":data,
                             "payment":arrayPayment
                         }    
-                        return Response({'data':dataMatriculaPago,'success':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
-                    
-                return Response({'data':data,'success':True,'message':'Matricula  creado exitosamente'},status=status.HTTP_201_CREATED)
+                        return Response({'data':dataMatriculaPago,'success':True,'message':'Matricula  y Pagos creado exitosamente'},status=status.HTTP_201_CREATED)
+                return Response({'data':data,'success':True,'message':'Matriculas creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear la matricula'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

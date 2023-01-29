@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
 from CobrosApp.models import Enrollement, Payment
+from rest_framework.decorators import api_view
 
 class PaymentAV(APIView):
     def get(self, request):
@@ -39,15 +39,16 @@ class PaymentDetail(APIView):
             return Response({'data':data,'success':True,'message':'Pago encontrada'},status=status.HTTP_200_OK)
         except Enrollement.DoesNotExist :
             return Response({'data':data,'success':False,'message':'Pago no encontrado'},status=status.HTTP_404_NOT_FOUND)
-    
-    def delete(self, request, pk):
-        data=None
-        course=None
-        try:
-            course=Enrollement.objects.get(pk=pk)
-            course.delete()
-            return Response({'data':[],'success':True,'message':'Matricula eliminado'},status=status.HTTP_200_OK)
-        except Enrollement.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Matricula no encontrado'},status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'data':data,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+def getAllByPaymentIdStudent(request,pk):
+    try:
+        if request.method == 'GET':
+            enrollement=Payment.objects.filter(enrollement__id=pk)
+            """  for student in enrollement:
+                    print(student.course.all())  """
+            #payment = enrollement.student.all()
+            serializer=PaymentSerializer(enrollement,many=True)
+            data=serializer.data
+            return Response({'data':data,'success':True,'message':'Todos los pagos del estudiante'},status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_404_NOT_FOUND)
