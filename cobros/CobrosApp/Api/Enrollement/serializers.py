@@ -8,6 +8,7 @@ from CobrosApp.Api.Tipe_pay.serializers import TypePaySerializer
 class EnrollementSerializer(serializers.ModelSerializer):
     #user=UserSerializer(read_only=True)
     student = StudentSerializer(read_only=True)
+    created_on = serializers.CharField(read_only=True)
     student_id=serializers.SlugRelatedField(queryset=Student.objects.all(),slug_field='id', write_only=True)
     
     cohorte = CohorteSerializer(read_only=True)
@@ -29,6 +30,7 @@ class EnrollementSerializer(serializers.ModelSerializer):
                    'day_limite',
                     'cash',
                     'discount',
+                    'created_on',
                 ]
     def create(self, validated_data):
         data = {

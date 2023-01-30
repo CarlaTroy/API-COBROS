@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
-from CobrosApp.models import Enrollement, Status_Pay
+from CobrosApp.models import Enrollement, Status_Pay,Cohorte
 from datetime import date, datetime
 
 class EnrollementAV(APIView):
@@ -36,12 +36,16 @@ class EnrollementAV(APIView):
                     count=1
                     arrayPayment=list()
                     #import pdb; pdb.set_trace()
+                    cohorte=Cohorte.objects.filter(pk=request.data['cohorte_id']).first()
+                    cuotas=int(request.data['cuotas'])
+                    descuentoCosuto=(cohorte.cost_credit)-(request.data['discount']/100)
+                    amount=(descuentoCosuto/cuotas)
                     while count<=data['cuotas']:
                         next_month = datetime(now.year, now.month+(count),data['day_limite'])
                         dataPayment={
-                            "amount": 1,
-                            "date_pay": now,
-                            "date_limit": now,
+                            "amount": amount,
+                            "date_pay": next_month,
+                            "date_limit": next_month,
                             "status_pay_id": idStatusPay.id,
                             "enrollement_id":data['id']
                         }
