@@ -40,15 +40,12 @@ class PaymentDetail(APIView):
         except Enrollement.DoesNotExist :
             return Response({'data':data,'success':False,'message':'Pago no encontrado'},status=status.HTTP_404_NOT_FOUND)
 @api_view(['GET'])
-def getAllByPaymentIdStudent(request,pk):
+def getAllByPaymentsEnrrollementId(request,pk):
     try:
         if request.method == 'GET':
             enrollement=Payment.objects.filter(enrollement__id=pk)
-            """  for student in enrollement:
-                    print(student.course.all())  """
-            #payment = enrollement.student.all()
             serializer=PaymentSerializer(enrollement,many=True)
             data=serializer.data
-            return Response({'data':data,'success':True,'message':'Todos los pagos del estudiante'},status=status.HTTP_200_OK)
+            return Response({'data':data,'success':True,'message':'Listado de todos los pago de la matricula con el id '+str(pk)},status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_404_NOT_FOUND)

@@ -3,7 +3,7 @@ from CobrosApp.Api.Course.views import CourseAV,CourseDetail
 from CobrosApp.Api.Cohorte.views import CohorteAV
 from CobrosApp.Api.Cohorte.views import CohorteDetail
 from CobrosApp.Api.Enrollement.views import EnrollementAV, EnrollementDetail
-from CobrosApp.Api.Payment.views import PaymentAV, getAllByPaymentIdStudent
+from CobrosApp.Api.Payment.views import PaymentAV, getAllByPaymentsEnrrollementId
 from CobrosApp.Api.Student.views import StudentAV
 from CobrosApp.Api.Student.views import StudentDetail
 from CobrosApp.Api.Tipe_pay.views import TypePayseAV
@@ -21,8 +21,10 @@ urlpatterns = [
     path('enrollements/<int:pk>',EnrollementDetail.as_view(),name='detalle-matricula'),
     
     path('payments/',PaymentAV.as_view(),name='listado-pagos'),
-    path('payments/student/<int:pk>',getAllByPaymentIdStudent,name='obtener-todos-pagos-estudainte'),
+    path('payments/enrollement/<int:pk>',getAllByPaymentsEnrrollementId,name='obtener-todos-pagos-estudainte'),
     path('payments/<int:pk>',EnrollementDetail.as_view(),name='detalle-matricula'),
     
     path('type-pays/',TypePayseAV.as_view(),name='listado-tipo-pagos'),
+    
+    path('status-pays/',TypePayseAV.as_view(),name='listado-estados-pagos'),
 ]
