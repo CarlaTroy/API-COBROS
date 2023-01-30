@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
@@ -59,7 +60,7 @@ class Enrollement(models.Model):
         return str(self.student.name+" "+self.cohorte.name) 
     
 class Payment(models.Model):
-    amount=models.PositiveIntegerField(max_length=10)
+    amount=models.DecimalField(max_digits=20, decimal_places=2,default=Decimal(0.00))
     date_pay=models.DateField(max_length=250)
     date_limit=models.DateField(max_length=250)
     status_pay=models.ForeignKey(Status_Pay,on_delete=models.RESTRICT,related_name='statuslist')
