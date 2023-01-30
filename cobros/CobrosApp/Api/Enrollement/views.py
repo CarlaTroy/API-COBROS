@@ -38,14 +38,14 @@ class EnrollementAV(APIView):
                     #import pdb; pdb.set_trace()
                     cohorte=Cohorte.objects.filter(pk=request.data['cohorte_id']).first()
                     cuotas=int(request.data['cuotas'])
-                    descuentoCosuto=(cohorte.cost_credit)-(request.data['discount']/100)
+                    descuentoCosuto=int(cohorte.cost_credit)-(int(cohorte.cost_credit)*(request.data['discount']/100))
                     amount=(descuentoCosuto/cuotas)
                     while count<=data['cuotas']:
                         next_month = datetime(now.year, now.month+(count),data['day_limite'])
                         dataPayment={
                             "amount": amount,
-                            "date_pay": next_month,
-                            "date_limit": next_month,
+                            "date_pay": next_month.date(),
+                            "date_limit": next_month.date(),
                             "status_pay_id": idStatusPay.id,
                             "enrollement_id":data['id']
                         }
