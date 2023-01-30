@@ -43,7 +43,7 @@ class EnrollementAV(APIView):
                     while count<=data['cuotas']:
                         next_month = datetime(now.year, now.month+(count),data['day_limite'])
                         dataPayment={
-                            "amount": amount,
+                            "amount": float("%3.f" % amount),
                             "date_pay": next_month.date(),
                             "date_limit": next_month.date(),
                             "status_pay_id": idStatusPay.id,
