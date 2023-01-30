@@ -39,6 +39,27 @@ class PaymentDetail(APIView):
             return Response({'data':data,'success':True,'message':'Pago encontrada'},status=status.HTTP_200_OK)
         except Enrollement.DoesNotExist :
             return Response({'data':data,'success':False,'message':'Pago no encontrado'},status=status.HTTP_404_NOT_FOUND)
+    def put(self,request,pk):
+        data=None
+        try:
+            payment=Payment.objects.get(pk=pk)
+            datePayment={
+                'amount': payment.amount,
+                'date_pay': request.data['date_pay'],
+                'date_limit': payment.date_limit,
+                'status_pay_id': request.data['status_pay_id'],
+                'enrollement_id': payment.enrollement.id
+            }
+            serializer=PaymentSerializer(payment,data=datePayment)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'data':data,'success':True,'message':'Pago actualizado'},status=status.HTTP_200_OK)
+            else:
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Pago'}, status=status.HTTP_400_BAD_REQUEST)
+        except Payment.DoesNotExist:
+            return Response({'data':data,'success':False,'message':'Pago no encontrado'},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'data':serializer.errors,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET'])
 def getAllByPaymentsEnrrollementId(request,pk):
     try:

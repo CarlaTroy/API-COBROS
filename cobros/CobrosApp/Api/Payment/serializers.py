@@ -33,12 +33,11 @@ class PaymentSerializer(serializers.ModelSerializer):
             'enrollement': validated_data.get('enrollement_id', None)
             }
         return Payment.objects.create(**data)
-"""     def update(self,instancia,validated_data):
-        instancia.name=validated_data.get('name',instancia.name)
-        instancia.last_name=validated_data.get('last_name',instancia.last_name)
-        instancia.identification=validated_data.get('identification',instancia.identification)
-        instancia.cell_phone=validated_data.get('cell_phone',instancia.cell_phone)
-        instancia.address=validated_data.get('address',instancia.address)
-        instancia.user=validated_data.get('user_id',instancia.user)
+    def update(self,instancia,validated_data):
+        instancia.amount=validated_data.get('amount',instancia.amount)
+        instancia.date_pay=validated_data.get('date_pay',instancia.date_pay)
+        instancia.date_limit=validated_data.get('date_limit',instancia.date_limit)
+        instancia.status_pay=validated_data.get('status_pay_id',instancia.status_pay_id)
+        instancia.enrollement=validated_data.get('enrollement_id',instancia.enrollement_id)
         instancia.save()
-        return instancia """
+        return instancia 

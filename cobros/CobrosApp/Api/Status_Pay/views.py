@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status 
 from CobrosApp.models import Status_Pay
-class TypePayseAV(APIView):
+class StatusPaysAV(APIView):
     def get(self, request):
         data=None
         try:
