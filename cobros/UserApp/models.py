@@ -4,6 +4,8 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import status
+""" from django.db import models
+from django.contrib.auth.models import AbstractUser """
 # Create your models here.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):
