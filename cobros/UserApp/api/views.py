@@ -130,6 +130,10 @@ def logout_view(request):
 def registration_view(request):
     try:
         if request.method == 'POST':
+            try:
+                group = Group.objects.get(name=request.data['group'])
+            except  Group.DoesNotExist:
+                return Response({'data':[],'success':False,'message':'El grupo '+request.data['group']+"  no existe"},status=status.HTTP_404_NOT_FOUND)
             ##valir que el usuarioname sera unico
             User = get_user_model()
             users_name = User.objects.filter(username=request.data['username']).first()
@@ -138,20 +142,23 @@ def registration_view(request):
             users_email = User.objects.filter(email=request.data['email']).first()
             if  users_email:
                 return Response({'data':[],'success':False,'message':'Ya existe un usurio con el correo de '+request.data['email']},status=status.HTTP_404_NOT_FOUND)
+            
             ## TODO OKKKK
             serializer=RegistrationSerializer(data=request.data)
             data={}
             if serializer.is_valid():
                 account=serializer.save()
-                group = Group.objects.get(name='group_secretarys')
-                account.groups.add(group)
-                data['response']='El registro del usuario fue exitoso'
                 data['username']=account.username
                 data['email']=account.email
                 data['is_staff']=account.is_staff
                 token=Token.objects.get(user=account).key
                 data['token']=token
-                #data['grupo']=group
+                ######### set group #########
+                ######### set group #########
+                group = Group.objects.get(name=request.data['group'])
+                account.groups.add(group)
+                serializerGroup=GroupSerializer(group)
+                data['grupo']=serializerGroup.data
                 return Response({'data':data,'success':True,'message':'Usuario creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 data=serializer.errors
