@@ -1,9 +1,10 @@
+from email.headerregistry import Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.models import Student
 from CobrosApp.Api.Student.serializers import StudentSerializer
-
+from django.contrib.auth.models import User
 class StudentAV(APIView):
     def get(self, request):
         data=None
@@ -21,7 +22,9 @@ class StudentAV(APIView):
             serializer=StudentSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                ##asinar a un grupo
                 data=serializer.data
+                
                 return Response({'data':data,'success':True,'message':'Estudiante creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 return Response({'data':serializer.errors,'success':False,'message':'No se puede crear el estudiante'}, status=status.HTTP_400_BAD_REQUEST)

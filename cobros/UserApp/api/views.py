@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
-from rest_framework import serializers
+from django.contrib.auth.models import Group
 #### PERMISOS ######
 #### PERMISOS ######
 ##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
@@ -11,7 +11,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
-from UserApp.api.serializers import    RegistrationSerializer, UserSerializer
+from UserApp.api.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
 
@@ -35,7 +35,11 @@ def login_view(request):
             data['email']=user.email
             data['is_staff']=user.is_staff
             token, _ = Token.objects.get_or_create(user=userAuth)
-            data['token']=token.key
+            data['token']=token.key,
+            ##grupo que pertenece
+            user_groups = user.groups.all()
+            serializerGroups=GroupSerializer(user_groups,many=True)
+            data['grupos']=serializerGroups.data
             return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
         return Response({'data':data,'success':False,'message':'Contraseña o usuario incorrecto'},status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
@@ -92,6 +96,19 @@ def listar_usuarios_view(request):
     except Exception as e:
         return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_400_BAD_REQUEST)
 
+
+########## LISTAR TODOS LOS GRUPOS #########
+@api_view(['GET'])
+def listar_grupos_view(request):
+    try:
+        print(request.user)
+        if request.method == 'GET':
+            groups = Group.objects.all()
+            serializer=GroupSerializer(groups,many=True)
+            return Response({'data':serializer.data,'success':True,'message':'Listado de todos los usuarios'},status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_400_BAD_REQUEST)
+
 ## CERRAR  SESION ######
 @api_view(['POST'])
 def logout_view(request):
@@ -112,8 +129,6 @@ def logout_view(request):
 #@permission_classes([AdminOrReadOnly])
 def registration_view(request):
     try:
-        print(" ** REGISTRAR USUARIO ***+")
-        print(request.data)
         if request.method == 'POST':
             ##valir que el usuarioname sera unico
             User = get_user_model()
@@ -128,14 +143,15 @@ def registration_view(request):
             data={}
             if serializer.is_valid():
                 account=serializer.save()
-                print("USUARIO")
-                print(account)
+                group = Group.objects.get(name='group_secretarys')
+                account.groups.add(group)
                 data['response']='El registro del usuario fue exitoso'
                 data['username']=account.username
                 data['email']=account.email
                 data['is_staff']=account.is_staff
                 token=Token.objects.get(user=account).key
                 data['token']=token
+                #data['grupo']=group
                 return Response({'data':data,'success':True,'message':'Usuario creado exitosamente'},status=status.HTTP_201_CREATED)
             else:
                 data=serializer.errors

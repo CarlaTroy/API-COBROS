@@ -1,3 +1,4 @@
+
 from django.contrib import admin
 
 from CobrosApp.models import Course,Cohorte,Student,Enrollement,Status_Pay,Tipe_Pay,Payment
@@ -14,3 +15,4 @@ admin.site.register(Status_Pay)
 admin.site.register(Tipe_Pay)
 admin.site.register(Payment)
 admin.site.register(Permission)
+#admin.site.register(Profile)
