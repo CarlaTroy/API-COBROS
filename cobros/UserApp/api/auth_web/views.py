@@ -1,3 +1,4 @@
+import json
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
@@ -11,7 +12,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
-from UserApp.api.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
+from UserApp.api.auth_web.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
 
@@ -30,13 +31,15 @@ def login_view(request):
             #User = get_user_model()
             user = User.objects.get(username=usuarioName)
             data['id']=user.id
-            data['response']='Inicio de sesión exitosamente'
             data['username']=user.username
             data['email']=user.email
             data['is_staff']=user.is_staff
             token, _ = Token.objects.get_or_create(user=userAuth)
             data['token']=token.key,
             ##grupo que pertenece
+            isStudent=user.groups.filter(name='Estudiante')
+            if isStudent:
+                return Response({'data':data,'success':False,'message':'No puede acceder a su información desde la web debe hacer mediante la app como estudiante'},status=status.HTTP_404_NOT_FOUND)
             user_groups = user.groups.all()
             serializerGroups=GroupSerializer(user_groups,many=True)
             data['grupos']=serializerGroups.data
@@ -83,8 +86,6 @@ def usuario_id_view(request,pk):
 @api_view(['GET'])
 #@permission_classes([AdminAuthPutOrReadOnly])
 def listar_usuarios_view(request):
-    print("**  LISTAR TODO LOS USUARIOS *****")
-    print(request)
     try:
         print(request.user)
         if request.method == 'GET':
@@ -146,24 +147,23 @@ def registration_view(request):
             ## TODO OKKKK
             serializer=RegistrationSerializer(data=request.data)
             data={}
-            if serializer.is_valid():
-                account=serializer.save()
-                data['username']=account.username
-                data['email']=account.email
-                data['is_staff']=account.is_staff
-                token=Token.objects.get(user=account).key
-                data['token']=token
-                ######### set group #########
-                ######### set group #########
-                group = Group.objects.get(name=request.data['group'])
-                account.groups.add(group)
-                serializerGroup=GroupSerializer(group)
-                data['grupo']=serializerGroup.data
-                return Response({'data':data,'success':True,'message':'Usuario creado exitosamente'},status=status.HTTP_201_CREATED)
-            else:
+            if not(serializer.is_valid()):
                 data=serializer.errors
                 return Response({'data':data,'success':False,'message':"No se puede crear el usuario "}, status=status.HTTP_400_BAD_REQUEST)
-            #return Response(data)
+            
+            account=serializer.save()
+            data['username']=account.username
+            data['email']=account.email
+            data['is_staff']=account.is_staff
+            token=Token.objects.get(user=account).key
+            data['token']=token
+            ######### set group #########
+            ######### set group #########
+            group = Group.objects.get(name=request.data['group'])
+            account.groups.add(group)
+            serializerGroup=GroupSerializer(group)
+            data['grupo']=serializerGroup.data
+            return Response({'data':data,'success':True,'message':'Usuario creado exitosamente'},status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error':'ERROR','message':str(e)}, status=status.HTTP_400_BAD_REQUEST)
       

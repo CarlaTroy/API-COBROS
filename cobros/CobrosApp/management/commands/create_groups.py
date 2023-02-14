@@ -9,14 +9,14 @@ class Command(BaseCommand):
     help = 'Creates read only default permission groups for users'
 
     def handle(self, *args, **options):
-        GROUPS = ['group_admins', 'group_secretarys', 'group_students']
+        GROUPS = ['Administrador', 'Secretaria', 'Estudiante']
         for group in GROUPS:
             new_group, created = Group.objects.get_or_create(name=group)
             
         ## ASIGNADMOS A CADA GRUPO PERMISOS A DIFERENTES TABLAS
         MODELS = ['student', 'enrollement', 'course', 'cohorte', 'payment', 'user']
         PERMISSIONS = ['view', ] 
-        group_admin, created = Group.objects.get_or_create(name='group_admins')
+        group_admin, created = Group.objects.get_or_create(name='Administrador')
         for model in MODELS:
             for permission in PERMISSIONS:
                 name = 'Can {} {}'.format(permission, model)
@@ -30,7 +30,7 @@ class Command(BaseCommand):
             
         MODELS_SECRETARY=['payment','student','user','enrollement']
         PERMISSIONS_SECRETARY=['view', ]
-        group_secretarys, created = Group.objects.get_or_create(name='group_secretarys')
+        group_secretarys, created = Group.objects.get_or_create(name='Secretaria')
         for model in MODELS_SECRETARY:
             for permission in PERMISSIONS_SECRETARY:
                 name = 'Can {} {}'.format(permission, model)
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 
         MODELS_STUDENT=['payment','user','enrollement','student']
         PERMISSIONS_STUDEN=['view']
-        group_students, created = Group.objects.get_or_create(name='group_students')
+        group_students, created = Group.objects.get_or_create(name='Estudiante')
         for model in MODELS_STUDENT:
             for permission in PERMISSIONS_STUDEN:
                 name = 'Can {} {}'.format(permission, model)
