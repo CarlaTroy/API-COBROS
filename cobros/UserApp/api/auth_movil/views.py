@@ -18,7 +18,7 @@ from django.contrib.auth import authenticate,logout
 
 ### INCIAR SESION #####
 @api_view(['POST'])
-def login_view(request):
+def login_view_movil(request):
     try:
         data={}
         #import pdb; pdb.set_trace()
@@ -37,23 +37,23 @@ def login_view(request):
             token, _ = Token.objects.get_or_create(user=userAuth)
             data['token']=token.key,
             ##grupo que pertenece
-            isStudent=user.groups.filter(name='Estudiante').first()
             isSecretary=user.groups.filter(name='Secretaria').first()
             isAdmin=user.groups.filter(name='Administrador').first()
+            isStudent=user.groups.filter(name='Estudiante').first()
+        
+            if isSecretary |isAdmin:
+                return Response({'data':[],'success':False,'message':'No puede acceder a su información desde el móvil'},status=status.HTTP_404_NOT_FOUND)
 
             if isStudent:
-                return Response({'data':[],'success':False,'message':'No puede acceder a su información desde la web debe hacer mediante la app como estudiante'},status=status.HTTP_404_NOT_FOUND)
-            
-            if isSecretary | isAdmin:
-                user_groups = user.groups.all()
-                serializerGroups=GroupSerializer(user_groups,many=True)
-                data['grupos']=serializerGroups.data
+                #user_groups = user.groups.all()
+                serializerStudent = GroupSerializer(isStudent, many = True)
+                data['Estudiante']=serializerStudent.data
                 return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
-        
         elif userAuth == None:
-            return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta con este usuario'},status=status.HTTP_404_NOT_FOUND)
+                return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta'},status=status.HTTP_404_NOT_FOUND)
             
         return Response({'data':data,'success':False,'message':'Contraseña o usuario incorrecto'},status=status.HTTP_404_NOT_FOUND)
+ 
     except Exception as e:
         return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_404_NOT_FOUND)
 

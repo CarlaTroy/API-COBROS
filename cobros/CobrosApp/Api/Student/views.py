@@ -7,7 +7,7 @@ from CobrosApp.Api.Student.serializers import StudentSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
-from UserApp.api.auth_web.serializers import GroupSerializer, RegistrationSerializer
+from UserApp.api.serializers import GroupSerializer, RegistrationSerializer
 class StudentAV(APIView):
     def get(self, request):
         data=None
