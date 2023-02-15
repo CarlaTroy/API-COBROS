@@ -71,3 +71,10 @@ class Payment(models.Model):
     def __str__(self) :
         return str(self.amount) 
     
+class CounterPassword(models.Model):
+    username=models.CharField(max_length=100)
+    count=models.IntegerField(max_length=3)
+    updated_on=models.DateTimeField(auto_now=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+    def __str__(self) :
+        return str(self.username) 

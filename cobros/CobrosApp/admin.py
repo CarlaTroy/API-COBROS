@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 
-from CobrosApp.models import Course,Cohorte,Student,Enrollement,Status_Pay,Tipe_Pay,Payment
+from CobrosApp.models import Course,Cohorte,Student,Enrollement,Status_Pay,Tipe_Pay,Payment,CounterPassword
 from django.contrib.auth.models import Permission
 # Register your models here.
 # Register your models here.
@@ -15,4 +15,5 @@ admin.site.register(Status_Pay)
 admin.site.register(Tipe_Pay)
 admin.site.register(Payment)
 admin.site.register(Permission)
+admin.site.register(CounterPassword)
 #admin.site.register(Profile)

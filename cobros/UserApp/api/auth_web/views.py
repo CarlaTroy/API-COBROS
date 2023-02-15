@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
 from django.contrib.auth.models import Group
+from CobrosApp.Api.CountPassword.serializers import CountPasswordSerializer
+from CobrosApp.models import CounterPassword
 #### PERMISOS ######
 #### PERMISOS ######
 ##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
@@ -11,11 +13,12 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-
+from django.core.cache import cache
 from UserApp.api.auth_web.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
-
+#validatePasswordCount=list()
+#cache.set('demo', validatePasswordCount, timeout=None)
 ### INCIAR SESION #####
 @api_view(['POST'])
 def login_view(request):
@@ -25,6 +28,36 @@ def login_view(request):
         #recuperamos las credenciales y autenticamos al usuarios
         usuarioName=request.data.get('username',None)
         password=request.data.get('password',None)
+        
+        ######  verificar si la contraseña es incorrecta  ########
+        #cont=0
+        user = User.objects.get(username=usuarioName)
+        ## ======== validar numero de intentos de contraseña =========##
+        cont=0
+        serializarCountPassword=None
+        intentos=3
+        if not user.check_password(password):
+            countPassword=CounterPassword.objects.filter(username=usuarioName).first()
+            ##primera vez que falla
+            if not countPassword:
+                dataCountPassword={
+                    'username':usuarioName,
+                    'count':cont
+                }
+                serializarCountPassword=CountPasswordSerializer(data=dataCountPassword)
+                if serializarCountPassword.is_valid():
+                    serializarCountPassword.save()
+                return Response({'data':data,'success':False,'message':'La contraseña es incorrecta tiene '+str(intentos-cont)+' intentos'},status=status.HTTP_404_NOT_FOUND)
+            ##ya fallo mas de una vez
+            cont=countPassword.count
+            if cont<=intentos:
+                cont=cont + 1
+                countPassword.count=cont
+                countPassword.save()
+                return Response({'data':data,'success':False,'message':'La contraseña es incorrecta tiene '+str(intentos-cont)+' intentos'},status=status.HTTP_404_NOT_FOUND)
+            ##enviar correo
+            countPassword.delete()
+            return Response({'data':data,'success':False,'message':'SE ENVIO UN CORREO CON UNA NUEA CONTRASEÑ '+str(intentos-cont)+' intentos'},status=status.HTTP_404_NOT_FOUND)
         userAuth=authenticate(username=usuarioName, password=password)
         ## si es correcto añadirmos a la reques la ifnroamcion de sesion
         if userAuth:
