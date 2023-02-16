@@ -1,8 +1,9 @@
 
 from CobrosApp.Api.CountPassword.serializers import CountPasswordSerializer
 from CobrosApp.models import CounterPassword
-from rest_framework.response import Response
-from rest_framework import status
+from django.core.mail import send_mail
+
+from cobros.settings import EMAIL_HOST
 class CountPasswordValidate:
     def intent(user,password):        
         cont=0
@@ -19,15 +20,22 @@ class CountPasswordValidate:
                 serializarCountPassword=CountPasswordSerializer(data=dataCountPassword)
                 if serializarCountPassword.is_valid():
                     serializarCountPassword.save()
-                return {'data':[],'success':False,'message':'La contraseña es incorrecta, numero de intentos sobrantes'+str(intentos-cont)}
+                return {'data':[],'success':False,'message':'La contraseña es incorrecta, numero de intentos sobrantes '+str(intentos)}
             ##ya fallo mas de una vez
             cont=countPassword.count
-            if cont<=intentos:
+            if cont<intentos:
                 cont=cont + 1
                 countPassword.count=cont
                 countPassword.save()
-                return {'data':[],'success':False,'message':'La contraseña es incorrecta, numero de intentos sobrantes'+str(intentos-cont)}
+                return {'data':[],'success':False,'message':'La contraseña es incorrecta, numero de intentos sobrantes '+str(intentos-cont)}
             ##enviar correo
             countPassword.delete()
-            return {'data':[],'success':False,'message':'SE ENVIO UN CORREO CON UNA NUEA CONTRASEÑ '+str(intentos-cont)+' intentos'}
+            email=send_mail(
+                'Hola '+str(user.username)+'Nueva contraseña generado para su inicio de session ',
+                'Cuerpo del correo',
+                EMAIL_HOST,
+                [user.email],
+                fail_silently=False,
+            )
+            return {'data':email,'success':False,'message':'SE ENVIO UNA CONTRASEÑA NUEVA A SU CORREO  '+str(user.email)}           
         return None

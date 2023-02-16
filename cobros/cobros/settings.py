@@ -141,5 +141,13 @@ CACHES = {
         'LOCATION': 'unique-snowflake'
     }
 }
+# Configuración de correo electrónico
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jmmorochoaunl.edu.ec@gmail.com' # reemplaza con tu cuenta de correo
+EMAIL_HOST_PASSWORD = 'rawfbcfupjqfvinc' # reemplaza con tu contraseña
+
 
 #AUTH_USER_MODEL = 'CobrosApp.User'
