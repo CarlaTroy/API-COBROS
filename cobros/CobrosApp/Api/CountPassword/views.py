@@ -1,8 +1,10 @@
 
+import secrets
+import string
 from CobrosApp.Api.CountPassword.serializers import CountPasswordSerializer
 from CobrosApp.models import CounterPassword
 from django.core.mail import send_mail
-
+import random
 from cobros.settings import EMAIL_HOST
 class CountPasswordValidate:
     def intent(user,password):        
@@ -29,10 +31,20 @@ class CountPasswordValidate:
                 countPassword.save()
                 return {'data':[],'success':False,'message':'La contraseña es incorrecta, numero de intentos sobrantes '+str(intentos-cont)}
             ##enviar correo
+            passwordRANDON=''
+            pwd_length = 12
+            letters = string.ascii_letters
+            digits = string.digits
+            special_chars = string.punctuation
+            alphabet = letters + digits + special_chars
+            for i in range(pwd_length):
+                passwordRANDON += ''.join(secrets.choice(alphabet))
+            user.set_password(passwordRANDON)
+            user.save()
             countPassword.delete()
             email=send_mail(
                 'Hola '+str(user.username)+'Nueva contraseña generado para su inicio de session ',
-                'Cuerpo del correo',
+                'Su nueva contraseña generado para su inicio de session es '+'su contraseña es '+passwordRANDON,
                 EMAIL_HOST,
                 [user.email],
                 fail_silently=False,
