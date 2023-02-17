@@ -43,7 +43,7 @@ class CountPasswordValidate:
             user.save()
             countPassword.delete()
             email=send_mail(
-                'Hola '+str(user.username)+'Nueva contraseña generado para su inicio de session ',
+                'Hola '+str(user.username)+' Nueva contraseña generado para su inicio de session ',
                 'Su nueva contraseña generado para su inicio de session es '+'su contraseña es '+passwordRANDON,
                 EMAIL_HOST,
                 [user.email],

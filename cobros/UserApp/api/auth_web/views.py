@@ -33,7 +33,7 @@ def login_view(request):
         ## ======== validar numero de intentos de contraseña =========##
         response=(CountPasswordValidate.intent(user,password))
         if response:
-           return Response(response)
+           return Response(response,status=status.HTTP_404_NOT_FOUND)
         userAuth=authenticate(username=usuarioName, password=password)
         ## si es correcto añadirmos a la reques la ifnroamcion de sesion
         if userAuth:
