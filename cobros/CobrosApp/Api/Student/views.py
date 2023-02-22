@@ -32,11 +32,11 @@ class StudentAV(APIView):
             User = get_user_model()
             users_name = User.objects.filter(username=request.data['identification']).first()
             if  users_name:
-                return Response({'data':[],'success':False,'message':'Ya existe un usurio con la identificación '+request.data['identification']},status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':[],'success':False,'message':'Ya existe un usuario con la identificación '+request.data['identification']},status=status.HTTP_400_BAD_REQUEST)
             
             users_email = User.objects.filter(email=request.data['email']).first()
             if  users_email:
-                return Response({'data':[],'success':False,'message':'Ya existe un usurio con el correo de '+request.data['email']},status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':[],'success':False,'message':'Ya existe un usuario con el correo de '+request.data['email']},status=status.HTTP_400_BAD_REQUEST)
             
             ##registrar usuario y esutdiante
             dataUser={
