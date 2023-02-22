@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from CobrosApp.Api.Permisos.permissions import AdminSecreatryOrReadOnly, AdminOrReadOnlyAdmin
 from CobrosApp.models import Student
 from CobrosApp.Api.Student.serializers import StudentSerializer
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from django.contrib.auth import get_user_model
 
 from UserApp.api.serializers import GroupSerializer, UserSerializer
 class StudentAV(APIView):
+    permission_classes =[AdminSecreatryOrReadOnly]
     def get(self, request):
         data=None
         try:

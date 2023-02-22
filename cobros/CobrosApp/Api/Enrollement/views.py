@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin
 from CobrosApp.models import Enrollement, Status_Pay,Cohorte
 from datetime import date, datetime
 from rest_framework.decorators import api_view
 class EnrollementAV(APIView):
+    permission_classes =[AdminOrReadOnlyAdmin]
     def get(self, request):
         data=None
         try:
