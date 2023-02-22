@@ -96,15 +96,26 @@ class StudentDetail(APIView):
         estudiante=None
         try:
             estudiante=Student.objects.get(pk=pk)
-            serializer=StudentSerializer(estudiante,data=request.data)
+            dataEstudiante={
+                'name':request.data['name'],
+                'last_name':request.data['last_name'],
+                'identification':request.data['identification'],
+                'address':request.data['address'],
+                'cell_phone':request.data['cell_phone'],
+                'user_id':estudiante.user.id
+            }
+            serializer=StudentSerializer(estudiante,data=dataEstudiante)
             if serializer.is_valid():
                 serializer.save()
+                usuario=User.objects.get(pk=estudiante.user.id)
+                usuario.email=request.data['email']
+                usuario.save()
                 data=serializer.data
-                return Response({'data':data,'success':True,'message':'Cohorte actualizado'},status=status.HTTP_200_OK)
+                return Response({'data':data,'success':True,'message':'Estudiante actualizado'},status=status.HTTP_200_OK)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Cohorte'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Estudiante'}, status=status.HTTP_400_BAD_REQUEST)
         except Student.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Estudiante no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':serializer.errors,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request, pk):
