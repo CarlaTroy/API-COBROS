@@ -6,7 +6,7 @@ from CobrosApp.Api.Course.serializers import CouserSerializer
 from rest_framework.permissions import BasePermission, DjangoModelPermissions
 class CourseAV(APIView):
     permission_classes = [DjangoModelPermissions]
-    group_required = 'Administrador'
+    group_required = ['Administrador']
     def get(self, request):
         data=None
         try:
