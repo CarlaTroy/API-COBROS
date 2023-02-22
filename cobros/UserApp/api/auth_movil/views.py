@@ -43,6 +43,7 @@ def login_view_movil(request):
             token, _ = Token.objects.get_or_create(user=userAuth)
             data['token']=token.key,
             ##grupo que pertenece
+            user_groups = user.groups.all()
             isSecretary=user.groups.filter(name='Secretaria').first()
             isAdmin=user.groups.filter(name='Administrador').first()
             isStudent=user.groups.filter(name='Estudiante').first()
@@ -52,8 +53,8 @@ def login_view_movil(request):
 
             if isStudent:
                 #user_groups = user.groups.all()
-                serializerStudent = GroupSerializer(isStudent, many = True)
-                data['Estudiante']=serializerStudent.data
+                serializerGroups = GroupSerializer(user_groups, many = True)
+                data['Estudiante']=serializerGroups.data
                 return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
         elif userAuth == None:
                 return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta'},status=status.HTTP_404_NOT_FOUND)
