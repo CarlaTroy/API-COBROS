@@ -4,7 +4,6 @@ import string
 from CobrosApp.Api.CountPassword.serializers import CountPasswordSerializer
 from CobrosApp.models import CounterPassword
 from django.core.mail import send_mail
-import random
 from cobros.settings import EMAIL_HOST
 class CountPasswordValidate:
     def intent(user,password):        
