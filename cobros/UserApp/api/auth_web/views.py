@@ -89,11 +89,21 @@ def usuario_id_view(request,pk):
         if request.method=='PUT':
             ## para q no se cree dos veces el mismo objeto
             serializerActualizar =UserSerializer(user,data=request.data)
-            if serializer.is_valid():
-                serializerActualizar.update(user,request.data)
-                return Response({'data':serializer.data,'success':True,'message':'Usuario actualizado exitosamente'},status=status.HTTP_200_OK)
+            dataUser={
+                'username':request.data['username'],
+                'email':request.data['email'],
+                'password':request.data['password'],
+                'password2':request.data['password2'],
+                'is_staff':request.data['is_staff']
+            }
+            if serializerActualizar.is_valid():
+                serializerActualizar.update(user,dataUser)
+                grupo = Group.objects.get(name=request.data['group'])
+                grupo.user_set.add(user)
+                grupo.save()
+                return Response({'data':serializerActualizar.data,'success':True,'message':'Usuario actualizado exitosamente'},status=status.HTTP_200_OK)
             else:
-               return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el usuario'}, status=status.HTTP_400_BAD_REQUEST)
+               return Response({'data':serializerActualizar.errors,'success':False,'message':'No se puede actulizar el usuario'}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.method=='DELETE':
             serializer = UserSerializer(user)
