@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status 
+from rest_framework import status
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnly 
 from CobrosApp.models import Course
 from CobrosApp.Api.Course.serializers import CouserSerializer
-from rest_framework.permissions import BasePermission, DjangoModelPermissions
+#from rest_framework.permissions import BasePermission, DjangoModelPermissions
 class CourseAV(APIView):
-    permission_classes = [DjangoModelPermissions]
-    group_required = ['Administrador']
+    #permission_classes = [DjangoModelPermissions]
+    #group_required = ['Administrador']
+    permission_classes =[AdminOrReadOnly]
     def get(self, request):
         data=None
         try:
