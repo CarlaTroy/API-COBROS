@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
 from django.contrib.auth.models import Group
+from CobrosApp.Api.CountPassword.views import CountPasswordValidate
 #### PERMISOS ######
 #### PERMISOS ######
 ##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
@@ -25,6 +26,11 @@ def login_view_movil(request):
         #recuperamos las credenciales y autenticamos al usuarios
         usuarioName=request.data.get('username',None)
         password=request.data.get('password',None)
+        ## ======== validar numero de intentos de contraseña =========##
+        user = User.objects.get(username=usuarioName)
+        response=(CountPasswordValidate.intent(user,password))
+        if response:
+           return Response(response,status=status.HTTP_404_NOT_FOUND)
         userAuth=authenticate(username=usuarioName, password=password)
         ## si es correcto añadirmos a la reques la ifnroamcion de sesion
         if userAuth:
