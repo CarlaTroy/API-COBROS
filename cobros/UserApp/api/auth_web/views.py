@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from UserApp.api.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
+from UserApp.api.serializers import    GroupSerializer, UserSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
 #validatePasswordCount=list()
@@ -46,23 +46,27 @@ def login_view(request):
             token, _ = Token.objects.get_or_create(user=userAuth)
             data['token']=token.key,
             ##grupo que pertenece
+            existGrupo = False
             isStudent=user.groups.filter(name='Estudiante').first()
             isSecretary=user.groups.filter(name='Secretaria').first()
             isAdmin=user.groups.filter(name='Administrador').first()
 
             if isStudent:
+                existGrupo=True
                 return Response({'data':[],'success':False,'message':'No puede acceder a su información desde la web debe hacer mediante la app como estudiante'},status=status.HTTP_404_NOT_FOUND)
             
-            if isSecretary | isAdmin:
+            if isSecretary or isAdmin:
+                existGrupo=True
                 user_groups = user.groups.all()
                 serializerGroups=GroupSerializer(user_groups,many=True)
                 data['grupos']=serializerGroups.data
                 return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
-        
+            if not existGrupo:
+                return Response({'data':[],'success':False,'message':'El usuario no pertenece a ningun grupo'},status=status.HTTP_404_NOT_FOUND)
         elif userAuth == None:
-            return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta con este usuario'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':[],'success':False,'message':'No existe una cuenta una cuenta con este usuario'},status=status.HTTP_404_NOT_FOUND)
             
-        return Response({'data':data,'success':False,'message':'Contraseña o usuario incorrecto'},status=status.HTTP_404_NOT_FOUND)
+        return Response({'data':[],'success':False,'message':'Contraseña o usuario incorrecto'},status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'data':[],'success':False,'message':"ERROR "+str(e)},status=status.HTTP_404_NOT_FOUND)
 
@@ -84,11 +88,9 @@ def usuario_id_view(request,pk):
         
         if request.method=='PUT':
             ## para q no se cree dos veces el mismo objeto
-            serializer =UserSerializer(
-                data=request.data, instance=user, context={'request': request}
-                )
+            serializerActualizar =UserSerializer(user,data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializerActualizar.update(user,request.data)
                 return Response({'data':serializer.data,'success':True,'message':'Usuario actualizado exitosamente'},status=status.HTTP_200_OK)
             else:
                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el usuario'}, status=status.HTTP_400_BAD_REQUEST)
@@ -105,7 +107,6 @@ def usuario_id_view(request,pk):
 #@permission_classes([AdminAuthPutOrReadOnly])
 def listar_usuarios_view(request):
     try:
-        print(request.user)
         if request.method == 'GET':
             User = get_user_model()
             users = User.objects.all()
@@ -120,7 +121,6 @@ def listar_usuarios_view(request):
 @api_view(['GET'])
 def listar_grupos_view(request):
     try:
-        print(request.user)
         if request.method == 'GET':
             groups = Group.objects.all()
             serializer=GroupSerializer(groups,many=True)
@@ -131,8 +131,6 @@ def listar_grupos_view(request):
 ## CERRAR  SESION ######
 @api_view(['POST'])
 def logout_view(request):
-    print("**  CERRAR SESION USER *****")
-    print(request)
     try:
         if request.method == 'POST':
             #logout(request)
@@ -163,7 +161,7 @@ def registration_view(request):
                 return Response({'data':[],'success':False,'message':'Ya existe un usurio con el correo de '+request.data['email']},status=status.HTTP_404_NOT_FOUND)
             
             ## TODO OKKKK
-            serializer=RegistrationSerializer(data=request.data)
+            serializer=UserSerializer(data=request.data)
             data={}
             if not(serializer.is_valid()):
                 data=serializer.errors

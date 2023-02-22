@@ -13,7 +13,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
-from UserApp.api.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
+from UserApp.api.serializers import    GroupSerializer, UserSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
 
@@ -47,7 +47,7 @@ def login_view_movil(request):
             isAdmin=user.groups.filter(name='Administrador').first()
             isStudent=user.groups.filter(name='Estudiante').first()
         
-            if isSecretary |isAdmin:
+            if isSecretary or isAdmin:
                 return Response({'data':[],'success':False,'message':'No puede acceder a su información desde el móvil'},status=status.HTTP_404_NOT_FOUND)
 
             if isStudent:
@@ -160,7 +160,7 @@ def registration_view(request):
                 return Response({'data':[],'success':False,'message':'Ya existe un usurio con el correo de '+request.data['email']},status=status.HTTP_404_NOT_FOUND)
             
             ## TODO OKKKK
-            serializer=RegistrationSerializer(data=request.data)
+            serializer=UserSerializer(data=request.data)
             data={}
             if not(serializer.is_valid()):
                 data=serializer.errors

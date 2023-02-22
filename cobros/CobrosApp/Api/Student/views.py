@@ -7,7 +7,7 @@ from CobrosApp.Api.Student.serializers import StudentSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
-from UserApp.api.serializers import GroupSerializer, RegistrationSerializer
+from UserApp.api.serializers import GroupSerializer, UserSerializer
 class StudentAV(APIView):
     def get(self, request):
         data=None
@@ -46,7 +46,7 @@ class StudentAV(APIView):
                 'password2':request.data['identification'],
                 'is_staff':True,
             }
-            serialzerUsuario=RegistrationSerializer(data=dataUser)
+            serialzerUsuario=UserSerializer(data=dataUser)
             if not (serialzerUsuario.is_valid()):
                 return Response({'data':serialzerUsuario.errors,'success':False,'message':'No se puede crear el usuario'}, status=status.HTTP_400_BAD_REQUEST)
             
