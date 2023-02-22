@@ -5,7 +5,7 @@ from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
 from CobrosApp.models import Enrollement, Status_Pay,Cohorte
 from datetime import date, datetime
-
+from rest_framework.decorators import api_view
 class EnrollementAV(APIView):
     def get(self, request):
         data=None
@@ -73,7 +73,7 @@ class EnrollementDetail(APIView):
         #buscar el registro
         try:
             enrollement=Enrollement.objects.get(pk=pk)
-            serializer=EnrollementSerializer(enrollement)
+            serializer=EnrollementSerializer(enrollement,many=True)
             data=serializer.data
             return Response({'data':data,'success':True,'message':'Matricula encontrada'},status=status.HTTP_200_OK)
         except Enrollement.DoesNotExist :
@@ -90,3 +90,11 @@ class EnrollementDetail(APIView):
             return Response({'data':data,'success':False,'message':'Matricula no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':data,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+def getEnrrollementStudentId(request,pk):
+    try:
+        enrrollement=Enrollement.objects.filter(student=pk)
+        serializer=EnrollementSerializer(enrrollement,many=True)
+        return Response({'data':serializer.data,'success':True,'message':'Resutaldos'},status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'data':[],'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)

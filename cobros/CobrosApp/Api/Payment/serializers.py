@@ -4,6 +4,8 @@ from CobrosApp.Api.Enrollement.serializers import EnrollementSerializer
 from CobrosApp.Api.Status_Pay.serializers import StatusPaySerializer
 from CobrosApp.models import Payment,Status_Pay,Enrollement
 
+
+        
 class PaymentSerializer(serializers.ModelSerializer):
     #user=UserSerializer(read_only=True)
     status_pay = StatusPaySerializer(read_only=True)
@@ -22,7 +24,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                    'status_pay', 
                    'status_pay_id',
                    'enrollement', 
-                   'enrollement_id'
+                   'enrollement_id',
                 ]
     def create(self, validated_data):
         data = {

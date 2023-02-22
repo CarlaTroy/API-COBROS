@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
 from django.contrib.auth.models import Group
+from CobrosApp.Api.CountPassword.views import CountPasswordValidate
 #### PERMISOS ######
 #### PERMISOS ######
 ##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
@@ -11,11 +12,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-
 from UserApp.api.serializers import    GroupSerializer, RegistrationSerializer, UserSerializer
 from django.contrib.auth import authenticate,logout
 
-
+#validatePasswordCount=list()
+#cache.set('demo', validatePasswordCount, timeout=None)
 ### INCIAR SESION #####
 @api_view(['POST'])
 def login_view(request):
@@ -25,6 +26,14 @@ def login_view(request):
         #recuperamos las credenciales y autenticamos al usuarios
         usuarioName=request.data.get('username',None)
         password=request.data.get('password',None)
+        
+        ######  verificar si la contraseña es incorrecta  ########
+        #cont=0
+        user = User.objects.get(username=usuarioName)
+        ## ======== validar numero de intentos de contraseña =========##
+        response=(CountPasswordValidate.intent(user,password))
+        if response:
+           return Response(response,status=status.HTTP_404_NOT_FOUND)
         userAuth=authenticate(username=usuarioName, password=password)
         ## si es correcto añadirmos a la reques la ifnroamcion de sesion
         if userAuth:

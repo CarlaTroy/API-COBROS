@@ -27,17 +27,16 @@ class StudentAV(APIView):
             group = Group.objects.get(name='Estudiante')
         except Group.DoesNotExist:
             return Response({'data':[],'success':False,'message':"El grupo no existe"},status=status.HTTP_404_NOT_FOUND)
-        
         try:
             ##buscamos el usuario
             User = get_user_model()
             users_name = User.objects.filter(username=request.data['identification']).first()
             if  users_name:
-                return Response({'data':[],'success':False,'message':'Ya existe un usurio con la identificación'+request.data['username']},status=status.HTTP_404_NOT_FOUND)
+                return Response({'data':[],'success':False,'message':'Ya existe un usuario con la identificación '+request.data['identification']},status=status.HTTP_400_BAD_REQUEST)
             
             users_email = User.objects.filter(email=request.data['email']).first()
             if  users_email:
-                return Response({'data':[],'success':False,'message':'Ya existe un usurio con el correo de '+request.data['email']},status=status.HTTP_404_NOT_FOUND)
+                return Response({'data':[],'success':False,'message':'Ya existe un usuario con el correo de '+request.data['email']},status=status.HTTP_400_BAD_REQUEST)
             
             ##registrar usuario y esutdiante
             dataUser={
@@ -97,15 +96,26 @@ class StudentDetail(APIView):
         estudiante=None
         try:
             estudiante=Student.objects.get(pk=pk)
-            serializer=StudentSerializer(estudiante,data=request.data)
+            dataEstudiante={
+                'name':request.data['name'],
+                'last_name':request.data['last_name'],
+                'identification':request.data['identification'],
+                'address':request.data['address'],
+                'cell_phone':request.data['cell_phone'],
+                'user_id':estudiante.user.id
+            }
+            serializer=StudentSerializer(estudiante,data=dataEstudiante)
             if serializer.is_valid():
                 serializer.save()
+                usuario=User.objects.get(pk=estudiante.user.id)
+                usuario.email=request.data['email']
+                usuario.save()
                 data=serializer.data
-                return Response({'data':data,'success':True,'message':'Cohorte actualizado'},status=status.HTTP_200_OK)
+                return Response({'data':data,'success':True,'message':'Estudiante actualizado'},status=status.HTTP_200_OK)
             else:
-                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Cohorte'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'data':serializer.errors,'success':False,'message':'No se puede actulizar el Estudiante'}, status=status.HTTP_400_BAD_REQUEST)
         except Student.DoesNotExist:
-            return Response({'data':data,'success':False,'message':'Cohorte no encontrado'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'data':data,'success':False,'message':'Estudiante no encontrado'},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'data':serializer.errors,'success':False,'message':"ERROR "+str(e)}, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request, pk):

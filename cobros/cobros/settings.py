@@ -134,4 +134,20 @@ REST_FRAMEWORK = {
     ] 
 }
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+# Configuración de correo electrónico
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'soporte.cenes.cobros@gmail.com' # reemplaza con tu cuenta de correo
+EMAIL_HOST_PASSWORD = 'lamnpecfnbyotwba' # reemplaza con tu contraseña
+
+
 #AUTH_USER_MODEL = 'CobrosApp.User'

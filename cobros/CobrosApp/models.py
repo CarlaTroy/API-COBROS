@@ -38,7 +38,7 @@ class Status_Pay(models.Model):
 class Student(models.Model):
     name=models.CharField(max_length=100)
     last_name=models.CharField(max_length=100)
-    identification=models.CharField(max_length=11)
+    identification=models.CharField(max_length=11,unique=True)
     cell_phone =models.CharField(max_length=15)
     address =models.CharField(max_length=100)
     user = models.ForeignKey(User,on_delete=models.RESTRICT,related_name='userlist')
@@ -50,7 +50,7 @@ class Student(models.Model):
 class Enrollement(models.Model):
     student=models.ForeignKey(Student,on_delete=models.RESTRICT,related_name='studentlist')
     cohorte=models.ForeignKey(Cohorte,on_delete=models.RESTRICT,related_name='cohortelist')
-    tipe_pay=models.ForeignKey(Tipe_Pay,on_delete=models.RESTRICT,related_name='tipopagolist')
+    tipe_pay=models.ForeignKey(Tipe_Pay,on_delete=models.CASCADE,related_name='tipopagolist')
     cuotas =models.PositiveIntegerField(max_length=10)
     day_limite =models.PositiveIntegerField(max_length=4)
     cash =models.PositiveIntegerField(max_length=10)
@@ -65,9 +65,16 @@ class Payment(models.Model):
     date_pay=models.DateField(max_length=250)
     date_limit=models.DateField(max_length=250)
     status_pay=models.ForeignKey(Status_Pay,on_delete=models.RESTRICT,related_name='statuslist')
-    enrollement=models.ForeignKey(Enrollement,on_delete=models.RESTRICT,related_name='enrrollementlist')
+    enrollement=models.ForeignKey(Enrollement,on_delete=models.CASCADE,related_name='enrrollementlist')
     updated_on=models.DateTimeField(auto_now=True)
     created_on=models.DateTimeField(auto_now_add=True)
     def __str__(self) :
         return str(self.amount) 
     
+class CounterPassword(models.Model):
+    username=models.CharField(max_length=100)
+    count=models.IntegerField(max_length=3)
+    updated_on=models.DateTimeField(auto_now=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+    def __str__(self) :
+        return str(self.username) 
