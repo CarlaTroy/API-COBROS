@@ -94,10 +94,13 @@ def usuario_id_view(request,pk):
                 'email':request.data['email'],
                 'password':request.data['password'],
                 'password2':request.data['password2'],
-                'is_staff':request.data['is_staff']
+                'is_staff':request.data['is_staff'],
+                'is_active':request.data['is_active'],
             }
             if serializerActualizar.is_valid():
                 serializerActualizar.update(user,dataUser)
+                
+                user.groups.clear()
                 grupo = Group.objects.get(name=request.data['group'])
                 grupo.user_set.add(user)
                 grupo.save()
@@ -118,8 +121,9 @@ def usuario_id_view(request,pk):
 def listar_usuarios_view(request):
     try:
         if request.method == 'GET':
+            #users_with_groups = User.objects.prefetch_related('Adminstrador').all()
             User = get_user_model()
-            users = User.objects.all()
+            users = User.objects.prefetch_related('groups').all()
             serializer =UserSerializer(users,many=True)
             print(serializer.data)
             return Response({'data':serializer.data,'success':True,'message':'Listado de todos los usuarios'},status=status.HTTP_200_OK)
