@@ -25,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         account = User(email=self.validated_data['email'],username=self.validated_data['username'])
         account.set_password(password)
         account.is_staff=self.validated_data['is_staff']
+        account.is_active=self.validated_data['is_active']
         account.save()
         return account 
     def update(self, instance, validated_data):

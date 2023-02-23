@@ -2,7 +2,9 @@
 from rest_framework  import serializers
 from CobrosApp.models import Student
 from django.contrib.auth.models import User
-from CobrosApp.Api.User.serializers import UserSerializer
+
+from UserApp.api.serializers import UserSerializer
+
 
 class StudentSerializer(serializers.ModelSerializer):
     #user=UserSerializer(read_only=True)

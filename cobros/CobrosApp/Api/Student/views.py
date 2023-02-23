@@ -21,7 +21,6 @@ class StudentAV(APIView):
         except Exception as e:
             return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
     def post(self,request):
-        #import pdb; pdb.set_trace()
         data=None
         group:None
         ##buscar el grupo estudiante
@@ -47,6 +46,7 @@ class StudentAV(APIView):
                 'password':request.data['identification'],
                 'password2':request.data['identification'],
                 'is_staff':True,
+                "is_active":request.data['is_active']
             }
             serialzerUsuario=UserSerializer(data=dataUser)
             if not (serialzerUsuario.is_valid()):
@@ -111,6 +111,7 @@ class StudentDetail(APIView):
                 serializer.save()
                 usuario=User.objects.get(pk=estudiante.user.id)
                 usuario.email=request.data['email']
+                usuario.is_active=request.data['is_active']
                 usuario.save()
                 data=serializer.data
                 return Response({'data':data,'success':True,'message':'Estudiante actualizado'},status=status.HTTP_200_OK)
