@@ -89,6 +89,10 @@ def usuario_id_view(request,pk):
         if request.method=='PUT':
             ## para q no se cree dos veces el mismo objeto
             serializerActualizar =UserSerializer(user,data=request.data)
+             ##controlar que todos los usuarios de tipó administradorno esten desactivados
+            count = User.objects.filter(is_active=True, groups__name='Administrador').count()
+            if (count==1) and (request.data['is_active']==False):
+                return Response({'data':[],'success':False,'message':'No puede desabilitar todos los usaurios de tipo admistador, por lo menos debe existir un admistrador'},status=status.HTTP_404_NOT_FOUND)
             dataUser={
                 'username':request.data['username'],
                 'email':request.data['email'],
@@ -99,7 +103,6 @@ def usuario_id_view(request,pk):
             }
             if serializerActualizar.is_valid():
                 serializerActualizar.update(user,dataUser)
-                
                 user.groups.clear()
                 grupo = Group.objects.get(name=request.data['group'])
                 grupo.user_set.add(user)
