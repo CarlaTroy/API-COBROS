@@ -4,6 +4,8 @@ from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
 from django.contrib.auth.models import Group
 from CobrosApp.Api.CountPassword.views import CountPasswordValidate
+from CobrosApp.Api.Student.serializers import StudentSerializer
+from CobrosApp.models import Student
 #### PERMISOS ######
 #### PERMISOS ######
 ##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
@@ -54,7 +56,15 @@ def login_view_movil(request):
             if isStudent:
                 #user_groups = user.groups.all()
                 serializerGroups = GroupSerializer(user_groups, many = True)
-                data['grupos']=serializerGroups.data
+                student=Student.objects.get(user__pk=user.id)
+                #serializerStudent = StudentSerializer(student, many = True)
+                estudianteGruop={
+                    "id": student.id,
+                    "name": serializerGroups.data[0]['name'],
+                    "permissions": serializerGroups.data[0]['permissions']
+                }
+                grupoEstudiante=[estudianteGruop]
+                data['grupos']=grupoEstudiante
                 return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
         elif userAuth == None:
                 return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta'},status=status.HTTP_404_NOT_FOUND)
