@@ -54,7 +54,7 @@ def login_view_movil(request):
             if isStudent:
                 #user_groups = user.groups.all()
                 serializerGroups = GroupSerializer(user_groups, many = True)
-                data['Estudiante']=serializerGroups.data
+                data['grupos']=serializerGroups.data
                 return Response({'data':data,'success':True,'message':'Inicio de sesión exitosamente'},status=status.HTTP_200_OK)
         elif userAuth == None:
                 return Response({'data':data,'success':False,'message':'No existe una cuenta una cuenta'},status=status.HTTP_404_NOT_FOUND)
