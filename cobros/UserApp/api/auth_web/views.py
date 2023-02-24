@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from CobrosApp.Api.CountPassword.views import CountPasswordValidate
 #### PERMISOS ######
 #### PERMISOS ######
-##from CobrosApp.api.permissions import AdminAuthPutOrReadOnly, AdminOrReadOnly, AuthPermisos
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin, AdminSecreatryOrReadOnly, AdminOrReadOnlySecretaria
 from UserApp import models
 from rest_framework.authtoken.models import Token
 from rest_framework import status
@@ -72,7 +72,7 @@ def login_view(request):
 
 ### OBTENRE USUARIO POR ID Y ACTUALIZAR USUARIO POR ID
 @api_view(['GET','PUT','DELETE'])
-##@permission_classes([AdminAuthPutOrReadOnly])
+@permission_classes([AdminOrReadOnlyAdmin])
 def usuario_id_view(request,pk):
     #import pdb; pdb.set_trace()
     try:
@@ -117,7 +117,7 @@ def usuario_id_view(request,pk):
 
 ########## LISTAR TODOS LOS USUARIOS #########
 @api_view(['GET'])
-#@permission_classes([AdminAuthPutOrReadOnly])
+@permission_classes([AdminOrReadOnlyAdmin])
 def listar_usuarios_view(request):
     try:
         if request.method == 'GET':
@@ -133,6 +133,7 @@ def listar_usuarios_view(request):
 
 ########## LISTAR TODOS LOS GRUPOS #########
 @api_view(['GET'])
+@permission_classes([AdminOrReadOnlyAdmin])
 def listar_grupos_view(request):
     try:
         if request.method == 'GET':
@@ -157,8 +158,9 @@ def logout_view(request):
 
 #### REGISTRAR USUARIO ########
 @api_view(['POST'])
-#@permission_classes([AdminOrReadOnly])
+@permission_classes([AdminOrReadOnlyAdmin])
 def registration_view(request):
+    
     try:
         if request.method == 'POST':
             try:

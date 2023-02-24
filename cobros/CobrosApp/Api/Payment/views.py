@@ -2,12 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Payment.serializers import PaymentSerializer
-from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin, AdminOrReadOnlySecretaria
 from CobrosApp.models import Enrollement, Payment
 from rest_framework.decorators import api_view
 
 class PaymentAV(APIView):
-    permission_classes =[AdminOrReadOnlyAdmin]
+    permission_classes =[AdminOrReadOnlySecretaria]
     def get(self, request):
         data=None
         try:

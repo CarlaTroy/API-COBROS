@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from django.contrib.auth.models import User
+
 class AdminSecreatryOrReadOnly(permissions.IsAdminUser):
     def has_permission(self, request, view):
         userName=request.user.username
@@ -30,3 +31,20 @@ class AdminOrReadOnlyAdmin(permissions.IsAdminUser):
         if isAdmin :
             permissioGroup=True
         return permissioGroup
+
+    
+class SecretaryPutOrReadOnly(permissions.IsAdminUser):
+     def has_permission(self, request, view):
+        userName=request.user.username
+        user = User.objects.get(username=userName)
+        isSecretary=user.groups.filter(name='Secretaria').first()
+        isAdmin=user.groups.filter(name='Administrador').first()
+        permissioGroup=False
+        if isSecretary:
+            if request.method =='POST' or request.method =='DELETE':
+                permissioGroup=False
+        else:  
+                permissioGroup=True   
+        return permissioGroup
+        
+        #if request.method =='GET' or request.method =='PUT' or request.method =='DELETE'
