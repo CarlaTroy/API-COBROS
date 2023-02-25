@@ -72,7 +72,7 @@ def login_view(request):
 
 ### OBTENRE USUARIO POR ID Y ACTUALIZAR USUARIO POR ID
 @api_view(['GET','PUT','DELETE'])
-@permission_classes([AdminOrReadOnlyAdmin])
+#@permission_classes([AdminOrReadOnlyAdmin])
 def usuario_id_view(request,pk):
     #import pdb; pdb.set_trace()
     try:

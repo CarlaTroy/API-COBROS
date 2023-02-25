@@ -1,5 +1,5 @@
 import json
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 #from user_app.api.serializers import UserSerializer, UserSerializer
 from django.contrib.auth.models import Group
@@ -11,10 +11,9 @@ from CobrosApp.models import Student
 from UserApp import models
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
-from UserApp.api.serializers import    GroupSerializer, UserSerializer, UserSerializer
+from UserApp.api.serializers import    GroupSerializer
 from django.contrib.auth import authenticate,logout
 
 
