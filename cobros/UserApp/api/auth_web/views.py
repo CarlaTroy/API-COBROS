@@ -99,7 +99,6 @@ def usuario_id_view(request,pk):
             }
             if serializerActualizar.is_valid():
                 serializerActualizar.update(user,dataUser)
-                
                 user.groups.clear()
                 grupo = Group.objects.get(name=request.data['group'])
                 grupo.user_set.add(user)
