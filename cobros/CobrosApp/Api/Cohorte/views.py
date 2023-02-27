@@ -1,13 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from CobrosApp.Api.Cohorte.serializers import CohorteSerializer 
+from CobrosApp.Api.Cohorte.serializers import CohorteSerializer
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin 
 from CobrosApp.models import Cohorte
-#from rest_framework.authentication import TokenAuthentication
-#from rest_framework.permissions import IsAuthenticatedOrReadOnly,AllowAny
-#from rest_framework.permissions import GroupPermissions
 
 class CohorteAV(APIView):
+    permission_classes=[AdminOrReadOnlyAdmin]
     def get(self, request):
         data=None
         try:
@@ -30,7 +29,7 @@ class CohorteAV(APIView):
         except Exception as e:
             return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class CohorteDetail(APIView):
-    parser_classes=[IsAuthenticatedOrReadOnly]
+    permission_classes=[AdminOrReadOnlyAdmin]
     def get(self,request,pk):
         data=None
         #buscar el registro
