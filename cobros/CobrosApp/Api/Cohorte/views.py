@@ -4,10 +4,10 @@ from rest_framework import status
 from CobrosApp.Api.Cohorte.serializers import CohorteSerializer 
 from CobrosApp.models import Cohorte
 #from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+#from rest_framework.permissions import IsAuthenticatedOrReadOnly,AllowAny
+#from rest_framework.permissions import GroupPermissions
 
 class CohorteAV(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
     def get(self, request):
         data=None
         try:
