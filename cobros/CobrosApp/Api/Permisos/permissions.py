@@ -31,20 +31,40 @@ class AdminOrReadOnlyAdmin(permissions.IsAdminUser):
         if isAdmin :
             permissioGroup=True
         return permissioGroup
+class StudentOrReadOnly(permissions.IsAdminUser):
+    def has_permission(self, request, view):
+        userName=request.user.username
+        user = User.objects.get(username=userName)
+        isEstudiante=user.groups.filter(name='Estudiante').first()
+        permissioGroup=False
+        if isEstudiante :
+            permissioGroup=True
+        return permissioGroup
 
     
-class SecretaryPutOrReadOnly(permissions.IsAdminUser):
+class StudentAdminPutOrReadOnly(permissions.IsAdminUser):
      def has_permission(self, request, view):
         userName=request.user.username
         user = User.objects.get(username=userName)
-        isSecretary=user.groups.filter(name='Secretaria').first()
+        isStudent=user.groups.filter(name='Estudiante').first()
         isAdmin=user.groups.filter(name='Administrador').first()
         permissioGroup=False
-        if isSecretary:
-            if request.method =='POST' or request.method =='DELETE':
-                permissioGroup=False
-        else:  
-                permissioGroup=True   
+        if request.method =='PUT'and  isStudent:
+            permissioGroup=True
+        if isAdmin:
+            permissioGroup=True
         return permissioGroup
-        
-        #if request.method =='GET' or request.method =='PUT' or request.method =='DELETE'
+    
+
+class SecrataryAdminPutOrReadOnly(permissions.IsAdminUser):
+     def has_permission(self, request, view):
+        userName=request.user.username
+        user = User.objects.get(username=userName)
+        isSecretaria=user.groups.filter(name='Secretaria').first()
+        isAdmin=user.groups.filter(name='Administrador').first()
+        permissioGroup=False
+        if request.method =='PUT'and  isSecretaria:
+            permissioGroup=True
+        if isAdmin:
+            permissioGroup=True
+        return permissioGroup

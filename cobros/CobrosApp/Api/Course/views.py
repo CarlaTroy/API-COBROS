@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from CobrosApp.Api.Permisos.permissions import SecretaryPutOrReadOnly, AdminSecreatryOrReadOnly, AdminOrReadOnlyAdmin, AdminOrReadOnlySecretaria 
+from CobrosApp.Api.Permisos.permissions import StudentAdminPutOrReadOnly, AdminSecreatryOrReadOnly, AdminOrReadOnlyAdmin, AdminOrReadOnlySecretaria 
 from CobrosApp.models import Course
 from CobrosApp.Api.Course.serializers import CouserSerializer
 #from rest_framework.permissions import BasePermission, DjangoModelPermissions
