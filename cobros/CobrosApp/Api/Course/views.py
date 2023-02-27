@@ -8,7 +8,7 @@ from CobrosApp.Api.Course.serializers import CouserSerializer
 class CourseAV(APIView):
     #permission_classes = [DjangoModelPermissions]
     #group_required = ['Administrador']
-    permission_classes =[SecretaryPutOrReadOnly]
+    permission_classes=[AdminOrReadOnlyAdmin]
     def get(self, request):
         data=None
         try:
