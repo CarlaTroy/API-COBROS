@@ -82,6 +82,7 @@ class StudentAV(APIView):
             return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 
 class StudentDetail(APIView):
+    permission_classes =[AdminSecreatryOrReadOnly]
     def get(self,request,pk):
         data=None
         #buscar el registro
