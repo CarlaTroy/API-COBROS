@@ -71,6 +71,7 @@ class EnrollementAV(APIView):
         except Exception as e:
             return Response({'data':data,'success':False,'message':'Error '+str(e)},status=status.HTTP_404_NOT_FOUND)
 class EnrollementDetail(APIView):
+    permission_classes =[AdminSecreatryOrReadOnly]
     def get(self,request,pk):
         data=None
         #buscar el registro
