@@ -68,3 +68,35 @@ class SecrataryAdminPutOrReadOnly(permissions.IsAdminUser):
         if isAdmin:
             permissioGroup=True
         return permissioGroup
+    
+class PermisosCourse(permissions.IsAdminUser):
+    def has_permission(self, request, view):
+        userName=request.user.username
+        user = User.objects.get(username=userName)
+        isSecretaria=user.groups.filter(name='Secretaria').first()
+        isAdmin=user.groups.filter(name='Administrador').first()
+        permissioGroup=False
+        
+        if request.method =='GET' and isSecretaria:
+            permissioGroup=True
+            return permissioGroup
+        if isAdmin:
+            permissioGroup=True
+            return permissioGroup
+        return permissioGroup
+    
+class PermisosCohorte(permissions.IsAdminUser):
+    def has_permission(self, request, view):
+        userName=request.user.username
+        user = User.objects.get(username=userName)
+        isSecretaria=user.groups.filter(name='Secretaria').first()
+        isAdmin=user.groups.filter(name='Administrador').first()
+        permissioGroup=False
+        
+        if request.method =='GET' and isSecretaria:
+            permissioGroup=True
+            return permissioGroup
+        if isAdmin:
+            permissioGroup=True
+            return permissioGroup
+        return permissioGroup

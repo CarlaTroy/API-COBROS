@@ -2,11 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from CobrosApp.Api.Cohorte.serializers import CohorteSerializer
-from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin 
+from CobrosApp.Api.Permisos.permissions import AdminOrReadOnlyAdmin, PermisosCohorte 
 from CobrosApp.models import Cohorte
 
 class CohorteAV(APIView):
-    permission_classes=[AdminOrReadOnlyAdmin]
+    permission_classes=[PermisosCohorte]
     def get(self, request):
         data=None
         try:
